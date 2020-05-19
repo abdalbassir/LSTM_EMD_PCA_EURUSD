@@ -1,0 +1,5 @@
+name: ProjectEnvironment
+channels:
+  - defaults
+prefix: /home/abdalbassir/anaconda3/envs/ProjectEnvironment
+
