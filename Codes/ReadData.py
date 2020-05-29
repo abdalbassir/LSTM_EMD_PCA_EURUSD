@@ -4,6 +4,9 @@ import os
 import Settings 
 
 def Initialize():
+    """
+    This function checks and creates the necessary repositories
+    """
     cashDir = Settings.cashDir
     featuresDir = Settings.featuresDir
     modelDir = Settings.modelDir
@@ -68,5 +71,6 @@ def ReadData():
 
 
 if __name__ == '__main__':
+    # Just for testing this function
     globalData = ReadData()
     print('Done')

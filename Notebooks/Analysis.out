@@ -1,0 +1,9 @@
+\BOOKMARK [1][-]{section.1}{Exploratory Analysis}{}% 1
+\BOOKMARK [2][-]{subsection.1.1}{Get the data}{section.1}% 2
+\BOOKMARK [1][-]{section.2}{Autocorrelation}{}% 3
+\BOOKMARK [1][-]{section.3}{Empirical Mode Decomposition \(EMD\)}{}% 4
+\BOOKMARK [1][-]{section.4}{LSTM Analysis}{}% 5
+\BOOKMARK [2][-]{subsection.4.1}{Denoise Levels}{section.4}% 6
+\BOOKMARK [2][-]{subsection.4.2}{PCA}{section.4}% 7
+\BOOKMARK [2][-]{subsection.4.3}{Epochs}{section.4}% 8
+\BOOKMARK [1][-]{section.5}{N Layers}{}% 9

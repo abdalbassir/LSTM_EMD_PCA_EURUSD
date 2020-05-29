@@ -9,6 +9,9 @@ from DenoiseByEMD import DenoiseByEMD
 
 
 def ExponentialGainOverLoss(prices, periods=14):
+    """
+    Helper function for RSI and ADX indicators
+    """
     returns = (prices - prices.shift(1))
     gains = np.maximum(returns,  0.0)
     losses = np.minimum(returns, 0.0).abs()
@@ -18,12 +21,18 @@ def ExponentialGainOverLoss(prices, periods=14):
     return rs
 
 def RelativeStrengthIndex(prices, periods=14):
+    """
+    RSI Indicator
+    """
     rs = ExponentialGainOverLoss(prices=prices, periods=periods)
     rsi = 100 * rs / (1 + rs)
     rsi[rs == np.inf] = 100.0
     return rsi
 
 def AverageDirectionalIndex(prices, periods=14):
+    """
+    ADX indicator
+    """
     rs = ExponentialGainOverLoss(prices=prices, periods=periods)
     rsi = 100 * rs / (1 + rs)
     rsi[rs == np.inf] = 100.0
@@ -33,6 +42,9 @@ def AverageDirectionalIndex(prices, periods=14):
     return adx
 
 def UlcerIndex(prices, periods=14): 
+    """
+    Ulcer index indicator
+    """
     maxPrices = prices.rolling(window = periods).max()    
     percentDrawdown = 100 * (prices - maxPrices) / maxPrices
     squaredAverage = np.power(percentDrawdown, 2.0).rolling(window = periods).mean()
@@ -41,10 +53,16 @@ def UlcerIndex(prices, periods=14):
 
 
 def RateOfChange(prices, periods=21):
+    """
+    Rate of Change indicator
+    """
     roc = 100 * prices.pct_change(periods)
     return roc
 
 def MACD(prices, ema1 = 12, ema2 = 26, ema3 = 9): 
+    """
+    MACD indicator
+    """
     closeEMA1 = prices.ewm(span = ema1).mean()
     closeEMA2 = prices.ewm(span = ema2).mean()
     ppo = (closeEMA1 - closeEMA2)
@@ -52,12 +70,18 @@ def MACD(prices, ema1 = 12, ema2 = 26, ema3 = 9):
     return signalLine
 
 def BollingerBands(prices, periods=14, std=2): 
+    """
+    Bollinger Bands indicator
+    """
     meanPrices = prices.rolling(window = periods).mean()   
     stdPrices = prices.rolling(window = periods).std()   
     bbl = (prices - meanPrices) / (std * stdPrices)
     return bbl
 
 def CommodityChannelIndex(prices, highPrices, lowPrices, periods=20, constant=0.015):
+    """
+    CCI Indicator
+    """
     typicalPrices = (prices + highPrices + lowPrices) / 3.0
     meanPrices = typicalPrices.rolling(window = periods).mean()   
     stdPrices = typicalPrices.rolling(window = periods).std()
@@ -65,20 +89,29 @@ def CommodityChannelIndex(prices, highPrices, lowPrices, periods=20, constant=0.
     return cci
 
 def AverageTrueRange(prices, highPrices, lowPrices, periods=10):
+    """
+    ATR indicator
+    """
     tr1 = np.maximum(highPrices - lowPrices, np.abs(highPrices - prices.shift(1)))
     tr = np.maximum(tr1, np.abs(lowPrices - prices.shift(1)))
     atr = tr.ewm(span=periods).mean()
     return atr
 
 def StochasticOscillator(prices, highPrices, lowPrices, periods=10):
+    """
+    Stochastic Oscillator
+    """
     lowest = lowPrices.rolling(window=periods).min()
     highest = highPrices.rolling(window=periods).max()
     percentK = 100 * ((prices - lowest) / (highest - lowest))
     percentD = percentK.rolling(window=3).mean()
     return percentK, percentD
 
-# a function used to calculate time series slope 
+
 def get_slope(array):
+    """
+    This function calculates time series slope 
+    """
     y = np.array(array)
     x = np.arange(len(y))
     slope, intercept, r_value, p_value, std_err = linregress(x,y)
@@ -86,6 +119,9 @@ def get_slope(array):
 
 
 def ComputeAllFeatures():
+    """
+    This function computes and cashes all the features
+    """
     removeLevel = Settings.denoiseLevel
     emdDir = Settings.emdDir
     filename = './Cashe/globalData_EMD_{}.pickle'.format(removeLevel)
@@ -176,6 +212,9 @@ def ComputeAllFeatures():
         mom.to_pickle(momFilename)
 
 def CreateFeatures():
+    """
+    This function combines all the features in a single dataframe
+    """
     globalDataEMD = DenoiseByEMD()
     emdDir = Settings.emdDir
     ComputeAllFeatures()
@@ -194,6 +233,7 @@ def CreateFeatures():
 
 
 if __name__ == '__main__':
+    # Just for testing this function
     dfFeatures = CreateFeatures()
     print(dfFeatures)
     print('Done')

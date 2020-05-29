@@ -7,6 +7,9 @@ import matplotlib.pyplot as plt
 
 
 def StrategyDevelopment():
+    """
+    This function creates and cashes the results (equity curve)
+    """
     capital = 1e7
     figsize=(12, 8)
     dfPrediction = PredictLSTMModel()
@@ -38,6 +41,7 @@ def StrategyDevelopment():
 
 
 if __name__ == '__main__':
+    # Run the simulation
     StrategyDevelopment()
     print('Done')
     

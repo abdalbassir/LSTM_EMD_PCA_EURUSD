@@ -10,6 +10,9 @@ import matplotlib.pyplot as plt
 from sklearn.decomposition import PCA
 
 def PCAReduction(df):
+    """
+    This function applies the PCA on the features
+    """
     df = df.dropna()
     (nSamples, nFeatures) = df.shape
     arrayFeatures = df.values
@@ -25,14 +28,14 @@ def PCAReduction(df):
     return dfPCAFeatures
 
 def SplitData():
+    """
+    This function returns the training data.
+    """
     # Get the features
     dfFeatures = pd.read_pickle(Settings.featuresFilename)
     # Applying Z-score normalization
     nDaysScale = Settings.nDaysScale
     dfFeatures = (dfFeatures - dfFeatures.rolling(window=nDaysScale).mean()) / dfFeatures.rolling(window=nDaysScale).std()
-    # dfFeaturesMin = dfFeatures.rolling(window=nDaysScale).min()
-    # dfFeaturesMax = dfFeatures.rolling(window=nDaysScale).max()
-    # dfFeatures = (dfFeatures - dfFeaturesMin) / (dfFeaturesMax - dfFeaturesMin)
     # Add the response (close prices) to the dataframe
     # PCA
     if Settings.applyPCA:
@@ -54,6 +57,9 @@ def SplitData():
     return dfTrainSet
 
 def GetXY(df, timeSteps):
+    """
+    Get the independent variables X and the response Y
+    """
     Y = df['Response'].values[timeSteps-1:]
     dfInd = df.drop(columns=['Response'], axis=1)
     vals = dfInd.values
@@ -61,6 +67,9 @@ def GetXY(df, timeSteps):
     return X, Y
 
 def TrainLSTMModel():
+    """
+    This function creates and trains LSTM model
+    """
     # Get Train Dataset
     modelFilename = Settings.modelFilename
     if os.path.exists(modelFilename):
@@ -90,6 +99,9 @@ def TrainLSTMModel():
     return model
 
 def PredictLSTMModel():
+    """
+    This function forecasts using the LSTM model
+    """
     dfFeatures = CreateFeatures()
     lstmFilename = Settings.predictionFilename
     if os.path.exists(lstmFilename):
@@ -98,8 +110,7 @@ def PredictLSTMModel():
     model = TrainLSTMModel()
     dfFeatures = pd.read_pickle(Settings.featuresWithYFilename)
     X, Y = GetXY(df=dfFeatures, timeSteps=Settings.timeSteps)
-    # reshape input to be [samples, time steps, features]
-    # X = np.reshape(X, (X.shape[0], 1, X.shape[1]))
+    # reshape input to be [samples, time steps, features] (already in the good shape)
     # Predict
     YPred = model.predict(X)
     YPred = YPred.reshape(X.shape[0])
@@ -111,6 +122,7 @@ def PredictLSTMModel():
 
 
 if __name__ == '__main__':
+    # Just for testing this function
     dfPrediction = PredictLSTMModel()
     print('Done')
     
